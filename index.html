@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COVID-19 Prediction Form</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+<h2>COVID-19 Prediction Form</h2>
+<h4>We can predict if you have COVID or not with a 98.4% accuracy, given you have correctly ticked the below boxes</h4>
+
+<form id="prediction-form">
+  <label for="breathing-problem">Breathing Problem:</label>
+  <input type="checkbox" id="breathing-problem" name="Breathing Problem" value="1"><br>
+
+  <label for="fever">Fever:</label>
+  <input type="checkbox" id="fever" name="Fever" value="1"><br>
+
+  <label for="dry-cough">Dry Cough:</label>
+  <input type="checkbox" id="dry-cough" name="Dry Cough" value="1"><br>
+
+  <label for="sore-throat">Sore Throat:</label>
+  <input type="checkbox" id="sore-throat" name="Sore throat" value="1"><br>
+
+  <label for="running-nose">Running Nose:</label>
+  <input type="checkbox" id="running-nose" name="Running Nose" value="1"><br>
+
+  <label for="asthma">Asthma:</label>
+  <input type="checkbox" id="asthma" name="Asthma" value="1"><br>
+
+  <label for="chronic-lung-disease">Chronic Lung Disease:</label>
+  <input type="checkbox" id="chronic-lung-disease" name="Chronic Lung Disease" value="1"><br>
+
+  <label for="headache">Headache:</label>
+  <input type="checkbox" id="headache" name="Headache" value="1"><br>
+
+  <label for="heart-disease">Heart Disease:</label>
+  <input type="checkbox" id="heart-disease" name="Heart Disease" value="1"><br>
+
+  <label for="diabetes">Diabetes:</label>
+  <input type="checkbox" id="diabetes" name="Diabetes" value="1"><br>
+
+  <label for="hyper-tension">Hyper Tension:</label>
+  <input type="checkbox" id="hyper-tension" name="Hyper Tension" value="1"><br>
+
+  <label for="fatigue">Fatigue:</label>
+  <input type="checkbox" id="fatigue" name="Fatigue " value="1"><br>
+
+  <label for="gastrointestinal">Gastrointestinal Disease:</label>
+  <input type="checkbox" id="gastrointestinal" name="Gastrointestinal " value="1"><br>
+
+  <label for="abroad-travel">Abroad Travel:</label>
+  <input type="checkbox" id="abroad-travel" name="Abroad travel" value="1"><br>
+
+  <label for="contact-with-covid-patient">Contact with COVID Patient:</label>
+  <input type="checkbox" id="contact-with-covid-patient" name="Contact with COVID Patient" value="1"><br>
+
+  <label for="attended-large-gathering">Attended Large Gathering:</label>
+  <input type="checkbox" id="attended-large-gathering" name="Attended Large Gathering" value="1"><br>
+
+  <label for="visited-public-exposed-places">Visited Public Places:</label>
+  <input type="checkbox" id="visited-public-exposed-places" name="Visited Public Exposed Places" value="1"><br>
+
+  <label for="family-working-in-public-exposed-places">Family Working in Public Places:</label>
+  <input type="checkbox" id="family-working-in-public-exposed-places" name="Family working in Public Exposed Places" value="1"><br>
+
+  <label for="wearing-masks">Wearing Masks:</label>
+  <input type="checkbox" id="wearing-masks" name="Wearing Masks" value="1"><br>
+
+  <label for="sanitization-from-market">Sanitization from Market:</label>
+  <input type="checkbox" id="sanitization-from-market" name="Sanitization from Market" value="1"><br>
+
+  <button type="submit">Submit</button>
+</form>
+<h1 id="prediction-result"></h1>
+</div>
+<script>
+document.getElementById('prediction-form').addEventListener('submit', function(event) {
+  event.preventDefault(); 
+  
+  
+  const formData = {};
+  const inputs = this.querySelectorAll('input[type="checkbox"]');
+  inputs.forEach(input => {
+    formData[input.name] = input.checked ? 1 : 0;
+  });
+
+  fetch('http://localhost:5000/predict', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    let text=""
+    if(data.prediction==0){
+        text = "There's a low chance that you have Covid. Please take an Official Covid Test to confirm."
+    }else{
+        text="There's a very high chance that you have Covid. Please take an Official Covid Test"
+    }
+    const predictionResult = document.getElementById('prediction-result');
+    predictionResult.textContent = text; 
+  })
+  .catch(error => {
+    console.error('There was a problem with the fetch operation:', error);
+  });
+
+ 
+  
+});
+</script>
+
+
+</body>
+</html>
