@@ -87,7 +87,7 @@ document.getElementById('prediction-form').addEventListener('submit', function(e
     formData[input.name] = input.checked ? 1 : 0;
   });
 
-  fetch('http://localhost:5000/predict', {
+  fetch('https://georgioelkhoury.pythonanywhere.com/predict', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
